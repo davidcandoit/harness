@@ -1,0 +1,20 @@
+# Is a simpilfied version
+import imaplib
+
+username = 'cam3raalarm@gmail.com'
+password = 'rdveoeyaxdgrxfeu'
+
+imap = imaplib.IMAP4_SSL("imap.gmail.com")
+imap.login(username, password)
+
+imap.select('inbox')
+
+status, data = imap.search(None, 'UNSEEN')
+
+if status == 'OK':
+    message_numbers = data[0].split()  # Split the result into individual message numbers
+    print("Found {} unseen messages:".format(len(message_numbers)))
+    for message_number in message_numbers:
+        print("- Message number:", message_number)
+else:
+    print("Error occurred during search:", data)
