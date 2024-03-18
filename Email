@@ -1,1 +1,41 @@
+import imaplib
+import time
+from datetime import datetime
+
+
+def check_mail(username, password):
+   
+    imap = imaplib.IMAP4_SSL("imap.gmail.com")
+    imap.login(username, password)
+
+    imap.select('inbox')
+
+    seen_messages = set()  # Set to store message IDs that have been seen
+    
+    search_query = ['(FROM "cam3raalarm@gmail.com")', 'UNSEEN']
+    status, data = imap.search (None, *search_query)
+
+    if status == 'OK':
+        messages = data[0].split()
+                
+        for message in messages:
+            if message not in seen_messages:
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                status, data = imap.fetch(message, '(RFC822)')
+
+                if status == 'OK':
+                    print(f"New email detected! at [ {current_time} ]")
+                    seen_messages.add(message)
+
+            imap.store(message, '+FLAGS', '\\Seen')  # Mark as seen after processing
+
+
+def main():  
+    username = 'cam3raalarm@gmail.com'
+    password = 'rdveoeyaxdgrxfeu'
+    while True:
+        check_mail(username, password)
+
+if __name__ == "__main__":
+     main()
 
