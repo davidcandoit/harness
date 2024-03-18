@@ -1,20 +1,39 @@
-# Is a simpilfied version
 import imaplib
+import time
+from datetime import datetime
 
-username = 'cam3raalarm@gmail.com'
-password = 'rdveoeyaxdgrxfeu'
 
-imap = imaplib.IMAP4_SSL("imap.gmail.com")
-imap.login(username, password)
+def check_mail(username, password):
+   
+    imap = imaplib.IMAP4_SSL("imap.gmail.com")
+    imap.login(username, password)
 
-imap.select('inbox')
+    imap.select('inbox')
 
-status, data = imap.search(None, 'UNSEEN')
+    seen_messages = set()  # Set to store message IDs that have been seen
 
-if status == 'OK':
-    message_numbers = data[0].split()  # Split the result into individual message numbers
-    print("Found {} unseen messages:".format(len(message_numbers)))
-    for message_number in message_numbers:
-        print("- Message number:", message_number)
-else:
-    print("Error occurred during search:", data)
+    status, data = imap.search(None, 'UNSEEN')
+
+    if status == 'OK':
+        messages = data[0].split()
+                
+        for message in messages:
+            if message not in seen_messages:
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                status, data = imap.fetch(message, '(RFC822)')
+
+                if status == 'OK':
+                    print(f"New email detected! at [ {current_time} ]")
+                    seen_messages.add(message)
+
+            imap.store(message, '+FLAGS', '\\Seen')  # Mark as seen after processing
+
+
+def main():  
+    username = 'cam3raalarm@gmail.com'
+    password = 'rdveoeyaxdgrxfeu'
+    while True:
+        check_mail(username, password)
+
+if __name__ == "__main__":
+     main()
