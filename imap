@@ -12,7 +12,8 @@ def check_mail(username, password):
 
     seen_messages = set()  # Set to store message IDs that have been seen
 
-    status, data = imap.search(None, 'UNSEEN')
+    search_query = ['(FROM "cam3raalarm@gmail.com")', 'UNSEEN']
+    status, data = imap.search (None, search_query)
 
     if status == 'OK':
         messages = data[0].split()
@@ -27,7 +28,6 @@ def check_mail(username, password):
                     seen_messages.add(message)
 
             imap.store(message, '+FLAGS', '\\Seen')  # Mark as seen after processing
-
 
 def main():  
     username = 'cam3raalarm@gmail.com'
