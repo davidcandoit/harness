@@ -5,8 +5,8 @@ import requests
 
 def send_tele ():
 
-    TOKEN = '6944922723:AAGIPPsRCt3xfQkCLVKb1E8QHblsHvSbyak'
-    CHAT_ID = '724134581'
+    TOKEN = '-'
+    CHAT_ID = '-'
     TEXT = 'ALERT'
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={TEXT}"
     r = requests.get(url)
@@ -19,7 +19,7 @@ def check_mail(username, password):
 
     imap.select('inbox')
 
-    search_query = ['(FROM "cam3raalarm@gmail.com")', 'UNSEEN']
+    search_query = ['(FROM "-")', 'UNSEEN']
     status, data = imap.search (None, *search_query)
 
     if status == 'OK':
@@ -39,8 +39,8 @@ def check_mail(username, password):
 
 
 def main():  
-    username = 'cam3raalarm@gmail.com'
-    password = 'rdveoeyaxdgrxfeu'
+    username = '-'
+    password = '-'
     while True:
         check_mail(username, password)
 
